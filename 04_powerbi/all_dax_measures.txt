@@ -1,0 +1,168 @@
+ ============================================================
+-- DATACO SUPPLY CHAIN INTELLIGENCE HUB
+-- ALL DAX MEASURES — Power BI
+============================================================
+
+-- Total Revenue
+Total Revenue = SUM(fact_orders[sales])
+
+-- Total Orders 
+Total Orders = DISTINCTCOUNT(fact_orders[order_id])
+
+-- Total Profit 
+Total Profit = SUM(fact_orders[order_profit_per_order])
+
+-- Average Order Value 
+Avg Order Value = DIVIDE([Total Revenue],[Total Orders],0)
+
+-- Average Cycle Time 
+Avg Cycle Time Days = AVERAGE(fact_orders[actual_delivery_days])
+
+--On time Delivery - OTD%
+OTD % = DIVIDE(COUNTROWS(FILTER(fact_orders, fact_orders[is_late] = 0)),
+    COUNTROWS(fact_orders),
+    0
+) * 100
+
+-- Late Delivery Percentage 
+Late Delivery % =
+DIVIDE(
+    COUNTROWS(FILTER(fact_orders, fact_orders[is_late] = 1)),
+    COUNTROWS(fact_orders),
+    0
+) * 100
+
+-- Total late Orders 
+Total Late Orders = SUM(fact_orders[is_late])
+
+-- Average Delay Days 
+Avg Delay Days =
+CALCULATE(
+    AVERAGE(fact_orders[delivery_delay_days]),
+    fact_orders[is_late] = 1
+)
+
+-- SLA Breach Rate ( First Class)
+First Class Late % =
+CALCULATE(
+    [Late Delivery %],
+    fact_orders[shipping_mode] = "First Class"
+)
+
+--Gross Margin Percentage
+Gross Margin % =
+DIVIDE(
+    SUM(fact_orders[order_profit_per_order]),
+    SUM(fact_orders[sales]),
+    0
+) * 100
+
+--Average Discount Percentage 
+Avg Discount % = AVERAGE(fact_orders[order_item_discount_rate]) * 100
+
+-- Loss Order Percentage 
+Loss Orders % =
+DIVIDE(
+    COUNTROWS(FILTER(fact_orders, fact_orders[is_profitable] = 0)),
+    COUNTROWS(fact_orders),
+    0
+) * 100
+
+
+-- Profit Per Order
+Profit per Order = DIVIDE([Total Profit], [Total Orders], 0)
+
+-- Unique Customers 
+Unique Customers = DISTINCTCOUNT(fact_orders[customer_id])
+
+-- Average Order Value
+Avg Order Value = DIVIDE([Total Revenue], [Total Orders], 0)
+
+-- Average Profit Ratio
+Avg Profit Ratio = 
+AVERAGE(fact_orders[order_item_profit_ratio]) * 100
+
+-- Consumer Orders per Customer
+Consumer Orders per Customer = 
+DIVIDE(
+    CALCULATE([Total Orders],
+        dim_customer[customer_segment] = "Consumer"),
+    CALCULATE([Unique Customers],
+        dim_customer[customer_segment] = "Consumer"),
+    0
+)
+
+-- Consumer Revenue
+Consumer Revenue = 
+CALCULATE(
+    [Total Revenue],
+    dim_customer[customer_segment] = "Consumer"
+)
+
+-- Consumer Revenue Share
+Consumer Revenue Share % = DIVIDE([Consumer Revenue], [Total Revenue], 0) * 100
+
+-- Corporate Orders per Customer
+Corporate Orders per Customer = 
+DIVIDE(
+    CALCULATE([Total Orders],
+        dim_customer[customer_segment] = "Corporate"),
+    CALCULATE([Unique Customers],
+        dim_customer[customer_segment] = "Corporate"),
+    0
+)
+
+-- Delivery Reliability
+Delivery Reliability % = 100 - [Late Delivery Rate %]
+
+-- Orders per Customer
+Orders per Customer = DIVIDE([Total Orders], [Unique Customers], 0)
+
+-- Revenue per Customer
+Revenue per Customer = DIVIDE([Total Revenue], [Unique Customers], 0)
+
+-- Total Late Orders
+Total Late Orders = SUM(fact_orders[is_late])
+
+-- Corporate Uplift
+Corporate Uplift = 
+VAR ConsumerRate =
+    CALCULATE([Orders per Customer],
+        dim_customer[customer_segment] = "Consumer")
+VAR CorpCount =
+    CALCULATE([Unique Customers],
+        dim_customer[customer_segment] = "Corporate")
+VAR CorpAOV =
+    CALCULATE([Avg Order Value],
+        dim_customer[customer_segment] = "Corporate")
+VAR CorpCurrentOrders =
+    CALCULATE([Total Orders],
+        dim_customer[customer_segment] = "Corporate")
+VAR CorpProjected = CorpCount * ConsumerRate
+VAR CorpAdditional = CorpProjected - CorpCurrentOrders
+RETURN IF(CorpAdditional > 0, CorpAdditional * CorpAOV, 0)
+
+-- Home Office Uplift
+Home Office Uplift = 
+VAR ConsumerRate =
+    CALCULATE([Orders per Customer],
+        dim_customer[customer_segment] = "Consumer")
+VAR HOCount =
+    CALCULATE([Unique Customers],
+        dim_customer[customer_segment] = "Home Office")
+VAR HOAOV =
+    CALCULATE([Avg Order Value],
+        dim_customer[customer_segment] = "Home Office")
+VAR HOCurrentOrders =
+    CALCULATE([Total Orders],
+        dim_customer[customer_segment] = "Home Office")
+VAR HOProjected = HOCount * ConsumerRate
+VAR HOAdditional = HOProjected - HOCurrentOrders
+RETURN IF(HOAdditional > 0, HOAdditional * HOAOV, 0)
+
+--Total Revenue Uplift Amount
+Total Revenue Uplift Amount = 
+FORMAT([Corporate Uplift] + [Home Office Uplift], "$#,##0")
+
+
+
