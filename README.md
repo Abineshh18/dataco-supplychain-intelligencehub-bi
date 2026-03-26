@@ -19,9 +19,9 @@ A global supply chain company with 180,518 orders across 4 markets and 3 years n
 
 ## Dashboard Preview
 ![Executive Overview](05_dashboard/2_dataco_dashboard_screenshots/page1_executive_overview.png)
-![Delivery Performance]()
-![Profitability]()
-![Customer Retention]()
+![Delivery Performance](05_dashboard/2_dataco_dashboard_screenshots/page2_delivery.png)
+![Profitability](05_dashboard/2_dataco_dashboard_screenshots/page3_profitability.png)
+![Customer Retention](05_dashboard/2_dataco_dashboard_screenshots/page4_customers.png)
 
 ## Technical Architecture
 ```
