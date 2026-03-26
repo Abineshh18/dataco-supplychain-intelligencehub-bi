@@ -18,7 +18,7 @@ A global supply chain company with 180,518 orders across 4 markets and 3 years n
 | Revenue Uplift Opportunity | $73,306 | Loyalty gap in B2B segments |
 
 ## Dashboard Preview
-![Executive Overview]()
+![Executive Overview](05_dashboard/2_dataco_dashboard_screenshots/page1_executive_overview.png)
 ![Delivery Performance]()
 ![Profitability]()
 ![Customer Retention]()
