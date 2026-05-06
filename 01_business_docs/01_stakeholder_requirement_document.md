@@ -2,11 +2,13 @@ Stakeholder Requirements Document
 Dataco Supply Chain Intelligence Hub
                                                                                         
 BI Professional: Abinesh
+
 Client/Sponsor: Supply Chain Operations Director
+
 Business problem: 
 The DataCo Supply Chain Operations team requires a comprehensive BI solution to monitor and diagnose performance across its global supply chain network. 
-The dataset spans 180,518 orders across 5 global markets over a 3-year period (2015–2018). T
-he business is growing in revenue but experiencing a simultaneous collapse in delivery performance, margin erosion driven by uncontrolled discounting, and untapped revenue in under-engaged customer segments.
+The dataset spans 180,518 orders across 5 global markets over a 3-year period (2015–2018).
+The business is growing in revenue but experiencing a simultaneous collapse in delivery performance, margin erosion driven by uncontrolled discounting, and untapped revenue in under-engaged customer segments.
 
 Stakeholders: 
 * Supply Chain Operations Director — Primary sponsor and decision-maker
